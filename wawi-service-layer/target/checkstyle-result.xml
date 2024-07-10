@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.12.1">
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/business/Product.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/business/StorageBin.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/business/Warehouse.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/service/WarehouseManagementServiceInterface.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/service/WarehouseManagementService.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/test/java/de/hrw/wi/service/WarehouseManagementServiceTest.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/test/java/de/hrw/wi/service/WarehouseManagementServiceIntegrationTest.java">
+</file>
+</checkstyle>

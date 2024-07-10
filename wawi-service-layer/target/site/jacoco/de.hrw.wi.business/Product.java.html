@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Product.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Wawi-Service-Layer</a> &gt; <a href="index.source.html" class="el_package">de.hrw.wi.business</a> &gt; <span class="el_source">Product.java</span></div><h1>Product.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.hrw.wi.business;
+
+/**
+ * @author andriesc
+ *
+ *         Die Klasse &lt;code&gt;Product&lt;/code&gt; repräsentiert einen Artikel, der in einem Lager ein- und
+ *         ausgelagert werden kann. Artikel haben einen Namen, einen 13-stelligen EAN-Code und eine
+ *         Größe.
+ *
+ */
+public class Product {
+    private static final String PRODUCT_CODE_DOES_NOT_HAVE_13_DIGITS =
+            &quot;Product code does not have 13 digits.&quot;;
+
+    /**
+     * name speichert die Bezeichnung des Produkts.
+     */
+    private String name;
+
+    /**
+     * productCode speichert die 13stellige EAN-Nummer. productCode muss immer eine 13stellige
+     * Zeichenkette aus den Ziffern 0-9 sein.
+     */
+    private String productCode;
+
+    /**
+     * size speichert die Groesse des Produktes als Zahl. Ein Produkt kann beispielsweise die
+     * Groesse 1, 5, 8 oder 24 haben. Die Groesse darf nicht 0 und nicht negativ sein.
+     */
+    private int size;
+
+    /**
+     * Erzeugt einen neuen Artikel.
+     * 
+     * @param name
+     *            Der Name des Artikels
+     * @param productCode
+     *            Der 13-stellige EAN-Code des Artikels.
+     * @param size
+     *            Die Größe des Artikels
+     */
+    public Product(String name, String productCode, int size) {
+<span class="fc" id="L46">        super();</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">        if (productCode.length() != 13) {</span>
+<span class="nc" id="L48">            throw new RuntimeException(PRODUCT_CODE_DOES_NOT_HAVE_13_DIGITS);</span>
+        }
+<span class="fc" id="L50">        this.name = name;</span>
+<span class="fc" id="L51">        this.productCode = productCode;</span>
+<span class="fc" id="L52">        this.size = size;</span>
+<span class="fc" id="L53">    }</span>
+
+    /**
+     * 
+     * @return Gibt den Namen des Artikels zurück.
+     */
+    public String getName() {
+<span class="fc" id="L60">        return name;</span>
+    }
+
+    /**
+     * Überschreibt den Namen eines Artikels.
+     * 
+     * @param name
+     *            Der neue Name des Artikels.
+     */
+    public void setName(String name) {
+<span class="nc" id="L70">        this.name = name;</span>
+<span class="nc" id="L71">    }</span>
+
+    /**
+     * 
+     * @return Der 13-stellige EAN-Code des Artikels.
+     */
+    public String getProductCode() {
+<span class="fc" id="L78">        return productCode;</span>
+    }
+
+    /**
+     * Überschreibt den EAN-Code eines Artikels.
+     * 
+     * @param productCode
+     *            Der neue 13-stellige Code des Artikels.
+     */
+    public void setProductCode(String productCode) {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (productCode.length() != 13) {</span>
+<span class="nc" id="L89">            throw new RuntimeException(PRODUCT_CODE_DOES_NOT_HAVE_13_DIGITS);</span>
+        }
+<span class="nc" id="L91">        this.productCode = productCode;</span>
+<span class="nc" id="L92">    }</span>
+
+    /**
+     * Gibt die Größe des Artikels zurück.
+     * 
+     * @return Die Größe des Artikels.
+     */
+    public int getSize() {
+<span class="nc" id="L100">        return size;</span>
+    }
+
+    /**
+     * Überschreibt die Größe des Artikels.
+     * 
+     * @param size
+     *            Die neue Größe des Artikels.
+     */
+    public void setSize(int size) {
+<span class="nc" id="L110">        this.size = size;</span>
+<span class="nc" id="L111">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,10 @@
+#Wed May 15 13:10:55 CEST 2024
+module-resource*?\:/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/target/checkstyle-suppressions.xml=722E9B12398AC9E5D30A93737E831D84BFE3BD34
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/test/java/de/hrw/wi/service/WarehouseManagementServiceIntegrationTest.java=1715764792881
+configuration*?=C24AA75B885A7DFE880F187B2F756D342DA52884
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/service/WarehouseManagementService.java=1715764792879
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/test/java/de/hrw/wi/service/WarehouseManagementServiceTest.java=1711049803166
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/business/Product.java=1709915983923
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/service/WarehouseManagementServiceInterface.java=1709915983925
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/business/Warehouse.java=1711049803155
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-service-layer/src/main/java/de/hrw/wi/business/StorageBin.java=1711049803151

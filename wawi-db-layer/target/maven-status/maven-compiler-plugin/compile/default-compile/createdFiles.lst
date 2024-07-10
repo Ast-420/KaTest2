@@ -1,0 +1,5 @@
+de/hrw/wi/databaseSetup/InitialDatabaseSetup.class
+de/hrw/wi/persistence/RealDatabase.class
+de/hrw/wi/persistence/DatabaseReadInterface.class
+de/hrw/wi/persistence/DatabaseWriteInterface.class
+de/hrw/wi/persistence/PersistenceException.class

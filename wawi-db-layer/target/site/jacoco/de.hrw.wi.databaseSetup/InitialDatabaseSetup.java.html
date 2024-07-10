@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InitialDatabaseSetup.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Wawi-DB-Layer</a> &gt; <a href="index.source.html" class="el_package">de.hrw.wi.databaseSetup</a> &gt; <span class="el_source">InitialDatabaseSetup.java</span></div><h1>InitialDatabaseSetup.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.hrw.wi.databaseSetup;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+/**
+ * @author andriesc
+ *
+ */
+@SuppressWarnings(&quot;SqlNoDataSourceInspection&quot;)
+public final class InitialDatabaseSetup {
+
+    private InitialDatabaseSetup() {
+        // vermeiden, dass der Konstruktor dieser Hilfsklasse aufgerufen wird:
+        // Deshalb Sichtbarkeit private
+    }
+
+    private static final String INSERT_INTO_PRODUCTS_VALUES = &quot;INSERT INTO PRODUCTS VALUES &quot;;
+    private static final String INSERT_INTO_STOCK_VALUES = &quot;INSERT INTO STOCK VALUES &quot;;
+    private static final String INSERT_INTO_WAREHOUSES_VALUES = &quot;INSERT INTO WAREHOUSES VALUES &quot;;
+
+    /**
+     * Erzeugt Datenbank mit Test-Daten.
+     * 
+     * @param args
+     *            wird nicht ausgewertet
+     * @throws SQLException
+     *             Bei Problemen mit der DB-Erzeugung
+     */
+    public static void main(String[] args) throws SQLException {
+<span class="nc" id="L35">        Connection c = DriverManager</span>
+<span class="nc" id="L36">                .getConnection(&quot;jdbc:hsqldb:file:../wawi-db-layer/database/wawi_db&quot;, &quot;sa&quot;, &quot;&quot;);</span>
+<span class="nc" id="L37">        c.setAutoCommit(false);</span>
+<span class="nc" id="L38">        System.out.println(&quot;Autocommit &quot;</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">                + (c.getAutoCommit() ? &quot;on&quot; : &quot;off&quot;));</span>
+
+<span class="nc" id="L41">        c.createStatement().executeQuery(&quot;DROP TABLE STOCK IF EXISTS&quot;);</span>
+<span class="nc" id="L42">        c.createStatement().executeQuery(&quot;DROP TABLE WAREHOUSES IF EXISTS&quot;);</span>
+<span class="nc" id="L43">        c.createStatement().executeQuery(&quot;DROP TABLE PRODUCTS IF EXISTS&quot;);</span>
+
+<span class="nc" id="L45">        c.createStatement().executeQuery(&quot;CREATE TABLE PRODUCTS (&quot;</span>
+                + &quot;articleCode varchar(13) PRIMARY KEY, name varchar(255), size INTEGER) &quot;);
+
+<span class="nc" id="L48">        c.createStatement().executeQuery(&quot;CREATE TABLE WAREHOUSES (&quot;</span>
+                + &quot;number INTEGER PRIMARY KEY, maxBin INTEGER, maxSize INTEGER) &quot;);
+<span class="nc" id="L50">        c.createStatement().executeQuery(&quot;CREATE TABLE STOCK (&quot;</span>
+                + &quot;number INTEGER, bin INTEGER, articleCode varchar(13), amount INTEGER,&quot;
+                + &quot; constraint PK_STOCK PRIMARY KEY (number, bin),&quot;
+                + &quot; constraint FK_PRODUCTS FOREIGN KEY (articleCode)&quot;
+                + &quot; REFERENCES PRODUCTS(articleCode),&quot;
+                + &quot; constraint FK_WAREHOUSE FOREIGN KEY (number) REFERENCES WAREHOUSES(number))&quot;);
+        
+<span class="nc" id="L57">        c.createStatement().executeQuery(INSERT_INTO_PRODUCTS_VALUES</span>
+                + &quot;('8806085948587','Samsung BD-H5500 3D Blu-ray-Player',3)&quot;);
+<span class="nc" id="L59">        c.createStatement().executeQuery(INSERT_INTO_PRODUCTS_VALUES</span>
+                + &quot;('0885909560462','Apple TV MD199FD/A',2)&quot;);
+<span class="nc" id="L61">        c.createStatement().executeQuery(INSERT_INTO_PRODUCTS_VALUES</span>
+                + &quot;('0636926062442','TomTom Start 25 M Europe Traffic',2)&quot;);
+<span class="nc" id="L63">        c.createStatement().executeQuery(INSERT_INTO_PRODUCTS_VALUES</span>
+                + &quot;('8806084893826','LG 40UB800V 101 cm (40 Zoll) LED-Backlight-Fernseher',8)&quot;);
+<span class="nc" id="L65">        c.createStatement().executeQuery(INSERT_INTO_PRODUCTS_VALUES</span>
+                + &quot;('4250366833286',&quot;
+                + &quot;'Gigaset C430 A Duo Dect-Schnurlostelefon mit Anrufbeantworter',2)&quot;);
+<span class="nc" id="L68">        c.createStatement().executeQuery(INSERT_INTO_PRODUCTS_VALUES</span>
+                + &quot;('0799637096608','Ipow schwarz Selfie Stange',1)&quot;);
+
+<span class="nc" id="L71">        c.createStatement().executeQuery(INSERT_INTO_WAREHOUSES_VALUES</span>
+                + &quot;(0,30,5)&quot;);
+<span class="nc" id="L73">        c.createStatement().executeQuery(INSERT_INTO_WAREHOUSES_VALUES</span>
+                + &quot;(1,30,10)&quot;);
+
+<span class="nc" id="L76">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(0,0,'8806085948587',1)&quot;);
+<span class="nc" id="L78">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(0,1,'8806085948587',1)&quot;);
+<span class="nc" id="L80">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(0,2,'8806085948587',1)&quot;);
+<span class="nc" id="L82">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(0,3,'0885909560462',2)&quot;);
+<span class="nc" id="L84">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(0,4,'0636926062442',2)&quot;);
+<span class="nc" id="L86">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(0,5,'4250366833286',2)&quot;);
+<span class="nc" id="L88">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(0,6,'0799637096608',4)&quot;);
+<span class="nc" id="L90">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(1,0,'8806084893826',1)&quot;);
+<span class="nc" id="L92">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(1,1,'8806084893826',1)&quot;);
+<span class="nc" id="L94">        c.createStatement().executeQuery(INSERT_INTO_STOCK_VALUES</span>
+                + &quot;(1,2,'0636926062442',5)&quot;);
+
+<span class="nc" id="L97">        c.commit();</span>
+<span class="nc" id="L98">        c.close();</span>
+<span class="nc" id="L99">        System.out.println(&quot;ready&quot;);</span>
+
+<span class="nc" id="L101">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,4 @@
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/DatabaseWriteInterfaceTest.java
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/DatabaseReadInterfaceTest.java
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/PersistenceExceptionTest.java
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/dbunit/DBUnitExporter.java

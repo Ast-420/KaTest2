@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StorageBin.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Wawi-Service-Layer</a> &gt; <a href="index.source.html" class="el_package">de.hrw.wi.business</a> &gt; <span class="el_source">StorageBin.java</span></div><h1>StorageBin.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.hrw.wi.business;
+
+/**
+ * @author andriesc
+ * 
+ *         StorageBin ist ein Ablagefach: Ein Fach, dass zu einem Lager mit einer Nummer gehört und
+ *         auch als Fach eine Nummer hat.
+ * 
+ *         Ein StorageBin kann nach der Erzeugung nicht mehr verändert werden.
+ * 
+ */
+public final class StorageBin {
+    private final int wareHouseNumber;
+    private final int bin;
+
+    /**
+     * @param wareHouseNumber
+     *            Die Nummer des Lagers, zu dem dieser StorageBin gehört
+     * @param binNumber
+     *            Die Nummer des StorageBins in dem Lager (sollte eindeutig sein)
+     */
+<span class="fc" id="L25">    public StorageBin(int wareHouseNumber, int binNumber) {</span>
+<span class="fc" id="L26">        this.wareHouseNumber = wareHouseNumber;</span>
+<span class="fc" id="L27">        this.bin = binNumber;</span>
+<span class="fc" id="L28">    }</span>
+
+    /**
+     * 
+     * @return Die Nummer des Lagers, zu dem dieses Fach gehört
+     */
+    public int getWareHouseNumber() {
+<span class="fc" id="L35">        return wareHouseNumber;</span>
+    }
+
+    /**
+     * 
+     * @return Die Nummer des Faches im Lager
+     */
+    public int getBinNumber() {
+<span class="fc" id="L43">        return bin;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

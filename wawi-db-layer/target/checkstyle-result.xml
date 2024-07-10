@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="10.12.1">
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/databaseSetup/InitialDatabaseSetup.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/persistence/DatabaseWriteInterface.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/persistence/PersistenceException.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/persistence/DatabaseReadInterface.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/persistence/RealDatabase.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/DatabaseReadInterfaceTest.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/DatabaseWriteInterfaceTest.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/dbunit/DBUnitExporter.java">
+</file>
+<file name="/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/PersistenceExceptionTest.java">
+</file>
+</checkstyle>

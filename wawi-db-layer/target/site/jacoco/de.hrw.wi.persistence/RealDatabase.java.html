@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RealDatabase.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Wawi-DB-Layer</a> &gt; <a href="index.source.html" class="el_package">de.hrw.wi.persistence</a> &gt; <span class="el_source">RealDatabase.java</span></div><h1>RealDatabase.java</h1><pre class="source lang-java linenums">/**
+ * 
+ */
+package de.hrw.wi.persistence;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * @author andriesc
+ *
+ */
+@SuppressWarnings(&quot;ALL&quot;)
+<span class="fc" id="L23">public class RealDatabase implements DatabaseReadInterface, DatabaseWriteInterface {</span>
+    private static final String DB_URL = &quot;jdbc:hsqldb:file:../wawi-db-layer/database/wawi_db&quot;;
+    private static final String USER = &quot;sa&quot;;
+    private static final String PASSWORD = &quot;&quot;;
+    private static final String PRODUCT_COULD_NOT_BE_ADDED = &quot;Product could not be added.&quot;;
+    private static final String PRODUCT_COULD_NOT_BE_DELETED = &quot;Product could not be deleted.&quot;;
+    private static final String WAREHOUSE_COULD_NOT_BE_ADDED = &quot;Warehouse could not be added.&quot;;
+    private static final String STOCK_COULD_NOT_BE_SET = &quot;Stock could not be set.&quot;;
+    private static final String BIN_IS_TOO_SMALL = &quot;Bin is too small.&quot;;
+    private static final String CONNECTION_CANNOT_BE_CLOSED =
+            &quot;Database connection cannot be closed.&quot;;
+
+    private void safeClose(Connection c) {
+        try {
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">            if (c != null) {</span>
+<span class="fc" id="L38">                c.close();</span>
+            }
+<span class="nc" id="L40">        } catch (SQLException e) {</span>
+<span class="nc" id="L41">            throw new PersistenceException(CONNECTION_CANNOT_BE_CLOSED);</span>
+<span class="fc" id="L42">        }</span>
+<span class="fc" id="L43">    }</span>
+
+    /**
+     * 
+     * @param sql
+     * @return ein &lt;code&gt;ResultSet&lt;/code&gt;, der vom Aufrufer geschlossen werden muss
+     * @throws SQLException
+     */
+    private ResultSet executeQuery(String sql) throws SQLException {
+<span class="fc" id="L52">        Connection c = null;</span>
+        try {
+<span class="fc" id="L54">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L55">            ResultSet rs = c.createStatement().executeQuery(sql);</span>
+<span class="fc" id="L56">            c.commit();</span>
+<span class="fc" id="L57">            return rs;</span>
+        } finally {
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">            if (c != null) {</span>
+<span class="fc" id="L60">                c.close();</span>
+            }
+        }
+    }
+
+    /**
+     * Führt Schreibzugriffe auf die Datenbank durch
+     * 
+     * @param c
+     *            Die Datenbankverbindung, mit der die Schreibzugriffe durchgeführt werden
+     * @param statementList
+     *            Eine Liste von PreparedStatements, die der Reihe nach ausgeführt werden
+     * @return Die Anzahl der veränderten Datensätze oder -1, wenn ein Fehler aufgetreten ist
+     * @throws SQLException
+     */
+    private int executePreparedStatementsUpdate(Connection c, List&lt;PreparedStatement&gt; statementList)
+            throws SQLException {
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (c == null) {</span>
+<span class="nc" id="L78">            return -1;</span>
+        }
+        try {
+<span class="fc" id="L81">            c.setAutoCommit(false);</span>
+
+<span class="fc" id="L83">            int result = -1;</span>
+<span class="fc" id="L84">            int resultSum = 0;</span>
+<span class="fc" id="L85">            Iterator&lt;PreparedStatement&gt; it = statementList.iterator();</span>
+<span class="pc bpc" id="L86" title="1 of 2 branches missed.">            if (it.hasNext()) {</span>
+                do {
+<span class="fc" id="L88">                    PreparedStatement statement = it.next();</span>
+<span class="fc" id="L89">                    result = statement.executeUpdate();</span>
+<span class="fc" id="L90">                    resultSum += result;</span>
+<span class="pc bpc" id="L91" title="1 of 4 branches missed.">                } while (it.hasNext() &amp;&amp; result &gt; 0);</span>
+            }
+
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">            if (result != 0) {</span>
+<span class="fc" id="L95">                c.commit();</span>
+            } else {
+<span class="nc" id="L97">                c.rollback();</span>
+<span class="nc" id="L98">                resultSum = 0;</span>
+            }
+
+<span class="fc" id="L101">            return resultSum;</span>
+<span class="nc" id="L102">        } catch (SQLException e) {</span>
+<span class="nc" id="L103">            c.rollback();</span>
+        } finally {
+<span class="fc" id="L105">            safeClose(c);</span>
+        }
+<span class="nc" id="L107">        return 0;</span>
+    }
+
+    private List&lt;String&gt; getStringList(ResultSet result) throws SQLException {
+<span class="fc" id="L111">        List&lt;String&gt; list = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        while (result.next())</span>
+<span class="fc" id="L113">            list.add(result.getString(1));</span>
+<span class="fc" id="L114">        result.close();</span>
+<span class="fc" id="L115">        return list;</span>
+    }
+
+    private List&lt;Integer&gt; getIntList(ResultSet result) throws SQLException {
+<span class="fc" id="L119">        List&lt;Integer&gt; list = new ArrayList&lt;Integer&gt;();</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        while (result.next())</span>
+<span class="fc" id="L121">            list.add(result.getInt(1));</span>
+<span class="fc" id="L122">        result.close();</span>
+<span class="fc" id="L123">        return list;</span>
+    }
+
+    private int getInt(ResultSet result) throws SQLException {
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (result.next()) {</span>
+<span class="fc" id="L128">            int resultInt = result.getInt(1);</span>
+<span class="fc" id="L129">            result.close();</span>
+<span class="fc" id="L130">            return resultInt;</span>
+        } else {
+<span class="fc" id="L132">            result.close();</span>
+<span class="fc" id="L133">            return 0;</span>
+        }
+    }
+
+    private String getString(ResultSet result) throws SQLException {
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (result.next()) {</span>
+<span class="fc" id="L139">            String resultStr = result.getString(1);</span>
+<span class="fc" id="L140">            result.close();</span>
+<span class="fc" id="L141">            return resultStr;</span>
+        } else {
+<span class="fc" id="L143">            result.close();</span>
+<span class="fc" id="L144">            return &quot;&quot;;</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Set&lt;Integer&gt; getAllWarehouses() {
+        try {
+<span class="fc" id="L153">            return new HashSet&lt;Integer&gt;(getIntList(executeQuery(&quot;SELECT number FROM WAREHOUSES&quot;)));</span>
+<span class="nc" id="L154">        } catch (SQLException e) {</span>
+<span class="nc" id="L155">            return null;</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getMaxAmountOfBins(int numberOfWarehouse) {
+<span class="fc" id="L163">        PreparedStatement statement = null;</span>
+<span class="fc" id="L164">        Connection c = null;</span>
+<span class="fc" id="L165">        int result = -1;</span>
+        try {
+<span class="fc" id="L167">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L168">            statement = c.prepareStatement(&quot;SELECT maxBin FROM WAREHOUSES WHERE number = ?&quot;);</span>
+<span class="fc" id="L169">            statement.setInt(1, numberOfWarehouse);</span>
+<span class="fc" id="L170">            result = getInt(statement.executeQuery());</span>
+<span class="nc" id="L171">        } catch (SQLException e) {</span>
+<span class="nc" id="L172">            result = -1;</span>
+        } finally {
+<span class="fc" id="L174">            safeClose(c);</span>
+        }
+
+<span class="fc" id="L177">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getMaxSizeOfBins(int numberOfWarehouse) {
+<span class="fc" id="L184">        PreparedStatement statement = null;</span>
+<span class="fc" id="L185">        Connection c = null;</span>
+<span class="fc" id="L186">        int result = -1;</span>
+        try {
+<span class="fc" id="L188">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L189">            statement = c.prepareStatement(&quot;SELECT maxSize FROM WAREHOUSES WHERE number = ?&quot;);</span>
+<span class="fc" id="L190">            statement.setInt(1, numberOfWarehouse);</span>
+<span class="fc" id="L191">            result = getInt(statement.executeQuery());</span>
+<span class="nc" id="L192">        } catch (SQLException e) {</span>
+<span class="nc" id="L193">            result = -1;</span>
+        } finally {
+<span class="fc" id="L195">            safeClose(c);</span>
+        }
+
+<span class="fc" id="L198">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getArticleCodeForBin(int numberOfWarehouse, int numberOfBin) {
+<span class="fc" id="L205">        PreparedStatement statement = null;</span>
+<span class="fc" id="L206">        Connection c = null;</span>
+<span class="fc" id="L207">        String result = null;</span>
+        try {
+<span class="fc" id="L209">            String sqlStr = &quot;SELECT articleCode FROM STOCK WHERE number = ? AND BIN = ?&quot;;</span>
+<span class="fc" id="L210">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L211">            statement = c.prepareStatement(sqlStr);</span>
+<span class="fc" id="L212">            statement.setInt(1, numberOfWarehouse);</span>
+<span class="fc" id="L213">            statement.setInt(2, numberOfBin);</span>
+<span class="fc" id="L214">            result = getString(statement.executeQuery());</span>
+<span class="nc" id="L215">        } catch (SQLException e) {</span>
+<span class="nc" id="L216">            result = null;</span>
+        } finally {
+<span class="fc" id="L218">            safeClose(c);</span>
+        }
+<span class="fc" id="L220">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getAmountForBin(int numberOfWarehouse, int numberOfBin) {
+<span class="fc" id="L227">        PreparedStatement statement = null;</span>
+<span class="fc" id="L228">        Connection c = null;</span>
+<span class="fc" id="L229">        int result = -1;</span>
+        try {
+<span class="fc" id="L231">            String sqlStr = &quot;SELECT amount FROM STOCK WHERE number = ? AND BIN = ?&quot;;</span>
+<span class="fc" id="L232">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L233">            statement = c.prepareStatement(sqlStr);</span>
+<span class="fc" id="L234">            statement.setInt(1, numberOfWarehouse);</span>
+<span class="fc" id="L235">            statement.setInt(2, numberOfBin);</span>
+<span class="fc" id="L236">            result = getInt(statement.executeQuery());</span>
+<span class="nc" id="L237">        } catch (SQLException e) {</span>
+<span class="nc" id="L238">            result = -1;</span>
+        } finally {
+<span class="fc" id="L240">            safeClose(c);</span>
+        }
+<span class="fc" id="L242">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Set&lt;String&gt; getAllProducts() {
+        try {
+<span class="fc" id="L250">            return new HashSet&lt;String&gt;(</span>
+<span class="fc" id="L251">                    getStringList(executeQuery(&quot;SELECT articleCode FROM PRODUCTS&quot;)));</span>
+<span class="nc" id="L252">        } catch (SQLException e) {</span>
+<span class="nc" id="L253">            return null;</span>
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getNameOfProduct(String articleCode) {
+<span class="fc" id="L261">        PreparedStatement statement = null;</span>
+<span class="fc" id="L262">        Connection c = null;</span>
+<span class="fc" id="L263">        String result = null;</span>
+        try {
+<span class="fc" id="L265">            String sqlStr = &quot;SELECT name FROM PRODUCTS WHERE articleCode = ?&quot;;</span>
+<span class="fc" id="L266">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L267">            statement = c.prepareStatement(sqlStr);</span>
+<span class="fc" id="L268">            statement.setString(1, articleCode);</span>
+<span class="fc" id="L269">            result = getString(statement.executeQuery());</span>
+<span class="nc" id="L270">        } catch (SQLException e) {</span>
+<span class="nc" id="L271">            result = null;</span>
+        } finally {
+<span class="fc" id="L273">            safeClose(c);</span>
+        }
+<span class="fc" id="L275">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public int getSizeOfProduct(String articleCode) {
+<span class="fc" id="L282">        PreparedStatement statement = null;</span>
+<span class="fc" id="L283">        Connection c = null;</span>
+<span class="fc" id="L284">        int result = -1;</span>
+        try {
+<span class="fc" id="L286">            String sqlStr = &quot;SELECT size FROM PRODUCTS WHERE articleCode = ?&quot;;</span>
+<span class="fc" id="L287">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L288">            statement = c.prepareStatement(sqlStr);</span>
+<span class="fc" id="L289">            statement.setString(1, articleCode);</span>
+<span class="fc" id="L290">            result = getInt(statement.executeQuery());</span>
+<span class="nc" id="L291">        } catch (SQLException e) {</span>
+<span class="nc" id="L292">            result = -1;</span>
+        } finally {
+<span class="fc" id="L294">            safeClose(c);</span>
+        }
+<span class="fc" id="L296">        return result;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addProduct(String articleCode, String name, int size) throws PersistenceException {
+<span class="pc bpc" id="L303" title="1 of 2 branches missed.">        if (articleCode.length() != 13) {</span>
+<span class="nc" id="L304">            throw new PersistenceException(&quot;Article code does not have 13 digits.&quot;);</span>
+        }
+
+<span class="fc" id="L307">        PreparedStatement statement = null;</span>
+<span class="fc" id="L308">        Connection c = null;</span>
+        try {
+<span class="fc" id="L310">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L311">            String sqlStr = &quot;INSERT INTO PRODUCTS VALUES(?, ?, ?)&quot;;</span>
+<span class="fc" id="L312">            statement = c.prepareStatement(sqlStr);</span>
+<span class="fc" id="L313">            statement.setString(1, articleCode);</span>
+<span class="fc" id="L314">            statement.setString(2, name);</span>
+<span class="fc" id="L315">            statement.setInt(3, size);</span>
+<span class="fc" id="L316">            int res = executePreparedStatementsUpdate(c, Arrays.asList(statement));</span>
+<span class="pc bpc" id="L317" title="1 of 2 branches missed.">            if (res == 0) {</span>
+<span class="nc" id="L318">                throw new PersistenceException(PRODUCT_COULD_NOT_BE_ADDED);</span>
+            }
+<span class="nc" id="L320">        } catch (SQLException e) {</span>
+<span class="nc" id="L321">            throw new PersistenceException(PRODUCT_COULD_NOT_BE_ADDED, e);</span>
+        } finally {
+<span class="fc" id="L323">            safeClose(c);</span>
+        }
+<span class="fc" id="L325">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public void deleteProduct(String articleCode) throws PersistenceException {
+<span class="fc" id="L331">        Connection c = null;</span>
+        try {
+<span class="fc" id="L333">            c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+
+<span class="fc" id="L335">            var statementList = new ArrayList&lt;PreparedStatement&gt;();</span>
+<span class="fc" id="L336">            String sqlStrStock = &quot;DELETE FROM STOCK WHERE articleCode = ? &quot;;</span>
+<span class="fc" id="L337">            PreparedStatement statement = c.prepareStatement(sqlStrStock);</span>
+<span class="fc" id="L338">            statement.setString(1, articleCode);</span>
+<span class="fc" id="L339">            statementList.add(statement);</span>
+
+<span class="fc" id="L341">            String sqlStrProducts = &quot;DELETE FROM PRODUCTS WHERE articleCode= ?&quot;;</span>
+<span class="fc" id="L342">            statement = c.prepareStatement(sqlStrProducts);</span>
+<span class="fc" id="L343">            statement.setString(1, articleCode);</span>
+<span class="fc" id="L344">            statementList.add(statement);</span>
+
+<span class="fc" id="L346">            int res = executePreparedStatementsUpdate(c, statementList);</span>
+
+<span class="pc bpc" id="L348" title="1 of 2 branches missed.">            if (res == 0) {</span>
+<span class="nc" id="L349">                throw new PersistenceException(PRODUCT_COULD_NOT_BE_DELETED);</span>
+            }
+<span class="nc" id="L351">        } catch (SQLException e) {</span>
+<span class="nc" id="L352">            throw new PersistenceException(PRODUCT_COULD_NOT_BE_DELETED);</span>
+        } finally {
+<span class="fc" id="L354">            safeClose(c);</span>
+        }
+<span class="fc" id="L356">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setStock(int numberOfWarehouse, int numberOfBin, String articleCode, int amount)
+            throws PersistenceException {
+        // Nur abspeichern, wenn es das Lager auch gibt
+<span class="fc" id="L364">        HashSet&lt;Integer&gt; warehouses = new HashSet&lt;Integer&gt;(getAllWarehouses());</span>
+<span class="pc bpc" id="L365" title="1 of 2 branches missed.">        if (!warehouses.contains(numberOfWarehouse)) {</span>
+<span class="nc" id="L366">            throw new PersistenceException(&quot;Warehouse does not exist.&quot;);</span>
+        }
+
+<span class="fc" id="L369">        HashSet&lt;String&gt; products = new HashSet&lt;String&gt;(getAllProducts());</span>
+
+        // Nur abspeichern, wenn es das Produkt bereits in der Datenbank
+        // gibt
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        if (!products.contains(articleCode)) {</span>
+<span class="fc" id="L374">            throw new PersistenceException(&quot;Product does not exist.&quot;);</span>
+        }
+
+        // Genuegend Platz? Falls nicht, abbrechen
+<span class="fc" id="L378">        int maxSize = getMaxSizeOfBins(numberOfWarehouse);</span>
+<span class="pc bpc" id="L379" title="1 of 2 branches missed.">        if (maxSize &lt; amount * getSizeOfProduct(articleCode)) {</span>
+<span class="nc" id="L380">            throw new PersistenceException(BIN_IS_TOO_SMALL);</span>
+        }
+
+        // Wenn wir bis hierhin kommen, existieren Produkt und Lager und das Fach ist groß genug
+
+        // Lagerplatz leer?
+<span class="fc bfc" id="L386" title="All 2 branches covered.">        if (getArticleCodeForBin(numberOfWarehouse, numberOfBin).equals(&quot;&quot;)) {</span>
+
+<span class="fc" id="L388">            Connection c = null;</span>
+            try {
+<span class="fc" id="L390">                c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L391">                String sqlStr = &quot;INSERT INTO STOCK VALUES(?, ?, ?, ?)&quot;;</span>
+<span class="fc" id="L392">                PreparedStatement statement = c.prepareStatement(sqlStr);</span>
+<span class="fc" id="L393">                statement.setInt(1, numberOfWarehouse);</span>
+<span class="fc" id="L394">                statement.setInt(2, numberOfBin);</span>
+<span class="fc" id="L395">                statement.setString(3, articleCode);</span>
+<span class="fc" id="L396">                statement.setInt(4, amount);</span>
+<span class="fc" id="L397">                int res = executePreparedStatementsUpdate(c, Arrays.asList(statement));</span>
+<span class="pc bpc" id="L398" title="1 of 2 branches missed.">                if (res == 0) {</span>
+<span class="nc" id="L399">                    throw new PersistenceException(STOCK_COULD_NOT_BE_SET);</span>
+                }
+
+<span class="nc" id="L402">            } catch (SQLException e) {</span>
+<span class="nc" id="L403">                throw new PersistenceException(STOCK_COULD_NOT_BE_SET, e);</span>
+            } finally {
+<span class="fc" id="L405">                safeClose(c);</span>
+            }
+<span class="fc" id="L407">        } else {</span>
+            // Lagerplatz nicht leer
+            // Es sind keine zwei verschiedenen Produkte pro Platz
+            // moeglich, liegt bereits das richtige Produkt auf dem Platz?
+<span class="fc" id="L411">            String exArtCode = getArticleCodeForBin(numberOfWarehouse, numberOfBin);</span>
+
+<span class="pc bpc" id="L413" title="1 of 2 branches missed.">            if (!exArtCode.equals(articleCode)) {</span>
+<span class="nc" id="L414">                throw new PersistenceException(&quot;Bin is already taken for different product.&quot;);</span>
+            }
+
+<span class="fc" id="L417">            Connection c = null;</span>
+            try {
+<span class="fc" id="L419">                c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L420">                String sqlStr = &quot;UPDATE STOCK SET articlecode=?, amount=? WHERE number=? AND bin=?&quot;;</span>
+<span class="fc" id="L421">                PreparedStatement statement = c.prepareStatement(sqlStr);</span>
+<span class="fc" id="L422">                statement.setString(1, articleCode);</span>
+<span class="fc" id="L423">                statement.setInt(2, amount);</span>
+<span class="fc" id="L424">                statement.setInt(3, numberOfWarehouse);</span>
+<span class="fc" id="L425">                statement.setInt(4, numberOfBin);</span>
+<span class="fc" id="L426">                int res = executePreparedStatementsUpdate(c, Arrays.asList(statement));</span>
+<span class="pc bpc" id="L427" title="1 of 2 branches missed.">                if (res == 0) {</span>
+<span class="nc" id="L428">                    throw new PersistenceException(STOCK_COULD_NOT_BE_SET);</span>
+                }
+
+<span class="nc" id="L431">            } catch (SQLException e) {</span>
+<span class="nc" id="L432">                throw new PersistenceException(STOCK_COULD_NOT_BE_SET, e);</span>
+            } finally {
+<span class="fc" id="L434">                safeClose(c);</span>
+            }
+        }
+
+<span class="fc" id="L438">    }</span>
+
+    /**
+     * {@inheritDoc}
+     */
+    public void addWarehouse(int number, int maxNumberOfBins, int maxSizeOfBins)
+            throws PersistenceException {
+<span class="pc bpc" id="L445" title="2 of 6 branches missed.">        if (number &gt;= 0 &amp;&amp; maxNumberOfBins &gt;= 1 &amp;&amp; maxSizeOfBins &gt;= 1) {</span>
+<span class="fc" id="L446">            Connection c = null;</span>
+
+            try {
+<span class="fc" id="L449">                c = DriverManager.getConnection(DB_URL, USER, PASSWORD);</span>
+<span class="fc" id="L450">                String sqlStr = &quot;INSERT INTO WAREHOUSES VALUES(?, ?, ?)&quot;;</span>
+<span class="fc" id="L451">                PreparedStatement statement = c.prepareStatement(sqlStr);</span>
+<span class="fc" id="L452">                statement.setInt(1, number);</span>
+<span class="fc" id="L453">                statement.setInt(2, maxNumberOfBins);</span>
+<span class="fc" id="L454">                statement.setInt(3, maxSizeOfBins);</span>
+
+<span class="fc" id="L456">                int res = executePreparedStatementsUpdate(c, Arrays.asList(statement));</span>
+<span class="pc bpc" id="L457" title="1 of 2 branches missed.">                if (res == 0) {</span>
+<span class="nc" id="L458">                    throw new PersistenceException(WAREHOUSE_COULD_NOT_BE_ADDED);</span>
+                }
+<span class="nc" id="L460">            } catch (SQLException e) {</span>
+<span class="nc" id="L461">                throw new PersistenceException(WAREHOUSE_COULD_NOT_BE_ADDED, e);</span>
+            } finally {
+<span class="fc" id="L463">                safeClose(c);</span>
+            }
+<span class="fc" id="L465">        } else {</span>
+<span class="fc" id="L466">            throw new PersistenceException(WAREHOUSE_COULD_NOT_BE_ADDED);</span>
+        }
+<span class="fc" id="L468">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

@@ -1,0 +1,4 @@
+de/hrw/wi/persistence/DatabaseWriteInterfaceTest.class
+de/hrw/wi/persistence/dbunit/DBUnitExporter.class
+de/hrw/wi/persistence/DatabaseReadInterfaceTest.class
+de/hrw/wi/persistence/PersistenceExceptionTest.class

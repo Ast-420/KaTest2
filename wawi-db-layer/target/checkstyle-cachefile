@@ -1,0 +1,12 @@
+#Wed May 15 13:10:44 CEST 2024
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/DatabaseWriteInterfaceTest.java=1715764792877
+configuration*?=CD4D4B92555D58D7A8D503E19BAF038D1E649729
+module-resource*?\:/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/../swep_suppressions.xml=722E9B12398AC9E5D30A93737E831D84BFE3BD34
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/persistence/DatabaseWriteInterface.java=1711049803128
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/persistence/RealDatabase.java=1711049803135
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/databaseSetup/InitialDatabaseSetup.java=1711374253006
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/persistence/PersistenceException.java=1711049803131
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/main/java/de/hrw/wi/persistence/DatabaseReadInterface.java=1709915983907
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/dbunit/DBUnitExporter.java=1711049803144
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/PersistenceExceptionTest.java=1709915983913
+/Users/andriesc/Documents/03_Lehre/00_Codebeispiele/Warenwirtschaftssystem/wawi-db-layer/src/test/java/de/hrw/wi/persistence/DatabaseReadInterfaceTest.java=1711049803138

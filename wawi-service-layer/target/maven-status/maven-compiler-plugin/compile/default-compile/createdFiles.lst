@@ -1,0 +1,5 @@
+de/hrw/wi/business/Warehouse.class
+de/hrw/wi/service/WarehouseManagementServiceInterface.class
+de/hrw/wi/service/WarehouseManagementService.class
+de/hrw/wi/business/StorageBin.class
+de/hrw/wi/business/Product.class
